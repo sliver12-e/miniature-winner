@@ -1,11 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-<<<<<<< HEAD
-import { Calendar, Star } from 'lucide-react'
-=======
 import { Calendar, Star, ArrowLeft } from 'lucide-react'
->>>>>>> 7b9415a (clean update)
 import { fetchForecastByCity, type ForecastData } from "@/lib/fetchWeather"
 import { useWeatherMood } from "@/lib/weatherMood"
 import { addFavorite, removeFavorite, isFavorite } from "@/lib/favorites"
@@ -14,17 +10,6 @@ import { ActivityCard } from "./activity-card"
 import { OutfitCard } from "./outfit-card"
 import { EventAdviceCard } from "./event-advice-card"
 import { FavoritesDropdown } from "./favorites-dropdown"
-<<<<<<< HEAD
-import { WeatherCardSkeleton, ThreeCardSkeleton } from "./skeleton-loader"
-
-interface PlanAheadModeProps {
-  onResultsReady: (mood: ReturnType<typeof useWeatherMood>) => void
-}
-
-const CITIES = ["Lagos", "Tokyo", "New York", "London", "Paris", "Sydney", "Dubai", "Singapore"]
-
-export function PlanAheadMode({ onResultsReady }: PlanAheadModeProps) {
-=======
 import { WeatherCardSkeleton } from "./skeleton-loader"
 
 interface PlanAheadModeProps {
@@ -33,7 +18,6 @@ interface PlanAheadModeProps {
 }
 
 export function PlanAheadMode({ onResultsReady, onBack }: PlanAheadModeProps) {
->>>>>>> 7b9415a (clean update)
   const [city, setCity] = useState("")
   const [date, setDate] = useState("")
   const [forecast, setForecast] = useState<ForecastData[]>([])
@@ -93,34 +77,12 @@ export function PlanAheadMode({ onResultsReady, onBack }: PlanAheadModeProps) {
       <div className="max-w-2xl mx-auto px-4">
         <div className="glass p-6 rounded-2xl space-y-4">
           <div className="flex justify-between items-center">
-<<<<<<< HEAD
-            <label htmlFor="city-select" className="block text-sm font-medium">
-              Select a city
-=======
             <label htmlFor="city-input" className="block text-sm font-medium">
               Enter a city
->>>>>>> 7b9415a (clean update)
             </label>
             <FavoritesDropdown onSelectCity={handleSelectFavorite} />
           </div>
           <div className="flex gap-2">
-<<<<<<< HEAD
-            <select
-              id="city-select"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              className="flex-1 px-4 py-3 rounded-lg bg-white/50 border border-white/30 outline-2 outline-offset-2 outline-primary transition-all hover:bg-white/60"
-              aria-label="City selection"
-              disabled={loading}
-            >
-              <option value="">Choose a city...</option>
-              {CITIES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-=======
             <input
               id="city-input"
               type="text"
@@ -130,7 +92,6 @@ export function PlanAheadMode({ onResultsReady, onBack }: PlanAheadModeProps) {
               className="flex-1 px-4 py-3 rounded-lg bg-white/50 border border-white/30 outline-2 outline-offset-2 outline-primary transition-all hover:bg-white/60"
               disabled={loading}
             />
->>>>>>> 7b9415a (clean update)
             <button
               onClick={handleToggleFavorite}
               disabled={!city}
@@ -156,10 +117,6 @@ export function PlanAheadMode({ onResultsReady, onBack }: PlanAheadModeProps) {
               onChange={(e) => setDate(e.target.value)}
               min={minDate}
               className="w-full px-4 py-3 rounded-lg bg-white/50 border border-white/30 outline-2 outline-offset-2 outline-primary transition-all hover:bg-white/60"
-<<<<<<< HEAD
-              aria-label="Event date selection"
-=======
->>>>>>> 7b9415a (clean update)
               disabled={loading}
             />
           </div>
@@ -181,8 +138,6 @@ export function PlanAheadMode({ onResultsReady, onBack }: PlanAheadModeProps) {
         </div>
       </div>
 
-<<<<<<< HEAD
-=======
       {/* Back to Mode Button */}
       {forecast.length > 0 && !loading && onBack && (
         <div className="max-w-2xl mx-auto px-4">
@@ -197,7 +152,6 @@ export function PlanAheadMode({ onResultsReady, onBack }: PlanAheadModeProps) {
       )}
 
       {/* Results Section */}
->>>>>>> 7b9415a (clean update)
       {loading && (
         <div className="max-w-6xl mx-auto px-4 space-y-6">
           <WeatherCardSkeleton />
@@ -211,32 +165,16 @@ export function PlanAheadMode({ onResultsReady, onBack }: PlanAheadModeProps) {
         </div>
       )}
 
-<<<<<<< HEAD
-      {/* Results Section */}
       {forecast.length > 0 && !loading && (
         <div className="max-w-6xl mx-auto px-4 space-y-6 animate-slide-up">
           <ForecastCard forecast={forecast} city={city} date={date} />
-
-=======
-      {forecast.length > 0 && !loading && (
-        <div className="max-w-6xl mx-auto px-4 space-y-6 animate-slide-up">
-          <ForecastCard forecast={forecast} city={city} date={date} />
->>>>>>> 7b9415a (clean update)
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-6">
               <ActivityCard
                 weather={
                   {
                     weather: [{ main: forecast[0].weather, description: forecast[0].description }],
-<<<<<<< HEAD
-                    main: {
-                      temp: forecast[0].temp,
-                      humidity: forecast[0].humidity,
-                      feels_like: forecast[0].feels_like,
-                    },
-=======
                     main: { temp: forecast[0].temp, humidity: forecast[0].humidity, feels_like: forecast[0].feels_like },
->>>>>>> 7b9415a (clean update)
                     wind: { speed: forecast[0].wind },
                     uv: forecast[0].uv,
                   } as any
@@ -246,15 +184,7 @@ export function PlanAheadMode({ onResultsReady, onBack }: PlanAheadModeProps) {
                 weather={
                   {
                     weather: [{ main: forecast[0].weather, description: forecast[0].description }],
-<<<<<<< HEAD
-                    main: {
-                      temp: forecast[0].temp,
-                      humidity: forecast[0].humidity,
-                      feels_like: forecast[0].feels_like,
-                    },
-=======
                     main: { temp: forecast[0].temp, humidity: forecast[0].humidity, feels_like: forecast[0].feels_like },
->>>>>>> 7b9415a (clean update)
                     wind: { speed: forecast[0].wind },
                     uv: forecast[0].uv,
                   } as any
