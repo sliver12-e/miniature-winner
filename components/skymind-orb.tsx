@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { Mic, X } from "lucide-react"
+import { Mic, X } from 'lucide-react'
 import { speak, stopSpeech } from "@/lib/tts"
 
 interface SkyMindOrbProps {
@@ -12,6 +12,7 @@ interface SkyMindOrbProps {
 
 export function SkyMindOrb({ isActive, summary, tone }: SkyMindOrbProps) {
   const [isSpeaking, setIsSpeaking] = useState(false)
+  const [isListening, setIsListening] = useState(false)
   const [showOverlay, setShowOverlay] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout>()
 
@@ -41,7 +42,9 @@ export function SkyMindOrb({ isActive, summary, tone }: SkyMindOrbProps) {
       {showOverlay && (
         <div className="fixed inset-0 pointer-events-none flex items-center justify-center z-40">
           <div className="glass-dark px-6 py-4 rounded-full backdrop-blur-xl animate-fade-in">
-            <p className="text-sm text-white font-medium">{isSpeaking ? "🎤 Skymind is speaking..." : "✓ Done"}</p>
+            <p className="text-sm text-white font-medium">
+              {isSpeaking ? "🎤 Skymind is speaking..." : isListening ? "👂 Listening..." : "✓ Done"}
+            </p>
           </div>
         </div>
       )}
@@ -52,7 +55,9 @@ export function SkyMindOrb({ isActive, summary, tone }: SkyMindOrbProps) {
         className={`fixed bottom-8 right-8 z-50 rounded-full shadow-2xl transition-all duration-300 outline-2 outline-offset-2 outline-primary ${
           isSpeaking
             ? "w-16 h-16 bg-accent animate-pulse-glow"
-            : "w-14 h-14 bg-gradient-to-br from-accent to-accent/80 hover:scale-110 active:scale-95"
+            : isListening
+              ? "w-16 h-16 bg-accent/80 animate-listening-pulse"
+              : "w-14 h-14 bg-gradient-to-br from-accent to-accent/80 hover:scale-110 active:scale-95"
         }`}
         aria-label={isSpeaking ? "Stop speaking" : "Let Skymind read the weather"}
         title={isSpeaking ? "Stop speaking" : "Let Skymind read the weather"}

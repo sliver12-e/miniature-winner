@@ -34,7 +34,6 @@
   --radius: 0.625rem;
 }
 
-/* Updated dark mode base background */
 .dark {
   --background: #121212;
   --foreground: #f5f5f5;
@@ -71,7 +70,6 @@
 }
 
 @theme inline {
-  /* optional: --font-sans, --font-serif, --font-mono if they are applied in the layout.tsx */
   --font-sans: "Geist", "Geist Fallback";
   --font-mono: "Geist Mono", "Geist Mono Fallback";
   --color-background: var(--background);
@@ -121,7 +119,6 @@
   }
 }
 
-/* Glassmorphism effect */
 .glass {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
@@ -134,7 +131,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Smooth fade-in animation */
+/* Added new animations: drift, rainfall, shimmer, sun-rotate, listening-pulse */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -165,6 +162,56 @@
   }
 }
 
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateX(0px) translateY(0px);
+  }
+  50% {
+    transform: translateX(30px) translateY(-10px);
+  }
+}
+
+@keyframes rainfall {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes sun-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes listening-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 193, 7, 0.6);
+  }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.6s ease-out;
 }
@@ -175,4 +222,24 @@
 
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-drift {
+  animation: drift 8s ease-in-out infinite;
+}
+
+.animate-rainfall {
+  animation: rainfall 1s linear infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+.animate-sun-rotate {
+  animation: sun-rotate 20s linear infinite;
+}
+
+.animate-listening-pulse {
+  animation: listening-pulse 1.5s ease-in-out infinite;
 }

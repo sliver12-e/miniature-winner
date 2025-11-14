@@ -1,13 +1,16 @@
 "use client"
 
-import { useState } from "react"
-import { Calendar } from 'lucide-react'
+import { useState, useEffect } from "react"
+import { Calendar, Star } from 'lucide-react'
 import { fetchForecastByCity, type ForecastData } from "@/lib/fetchWeather"
 import { useWeatherMood } from "@/lib/weatherMood"
+import { addFavorite, removeFavorite, isFavorite } from "@/lib/favorites"
 import { ForecastCard } from "./forecast-card"
 import { ActivityCard } from "./activity-card"
 import { OutfitCard } from "./outfit-card"
 import { EventAdviceCard } from "./event-advice-card"
+import { FavoritesDropdown } from "./favorites-dropdown"
+import { WeatherCardSkeleton, ThreeCardSkeleton } from "./skeleton-loader"
 
 interface PlanAheadModeProps {
   onResultsReady: (mood: ReturnType<typeof useWeatherMood>) => void
@@ -21,7 +24,12 @@ export function PlanAheadMode({ onResultsReady }: PlanAheadModeProps) {
   const [forecast, setForecast] = useState<ForecastData[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [isFav, setIsFav] = useState(false)
   const mood = useWeatherMood("")
+
+  useEffect(() => {
+    setIsFav(city ? isFavorite(city) : false)
+  }, [city])
 
   const handleCheck = async () => {
     if (!city.trim() || !date) return
@@ -33,7 +41,6 @@ export function PlanAheadMode({ onResultsReady }: PlanAheadModeProps) {
       const data = await fetchForecastByCity(city)
       setForecast(data)
 
-      // Generate mood from first forecast entry
       const description = data[0] ? data[0].description : ""
       const realMood = useWeatherMood(description)
       onResultsReady(realMood)
@@ -46,6 +53,21 @@ export function PlanAheadMode({ onResultsReady }: PlanAheadModeProps) {
     }
   }
 
+  const handleToggleFavorite = () => {
+    if (!city) return
+    if (isFav) {
+      removeFavorite(city)
+      setIsFav(false)
+    } else {
+      addFavorite(city)
+      setIsFav(true)
+    }
+  }
+
+  const handleSelectFavorite = (favCity: string) => {
+    setCity(favCity)
+  }
+
   const tomorrow = new Date()
   tomorrow.setDate(tomorrow.getDate() + 1)
   const minDate = tomorrow.toISOString().split("T")[0]
@@ -55,15 +77,18 @@ export function PlanAheadMode({ onResultsReady }: PlanAheadModeProps) {
       {/* Input Section */}
       <div className="max-w-2xl mx-auto px-4">
         <div className="glass p-6 rounded-2xl space-y-4">
-          <div>
-            <label htmlFor="city-select" className="block text-sm font-medium mb-2">
+          <div className="flex justify-between items-center">
+            <label htmlFor="city-select" className="block text-sm font-medium">
               Select a city
             </label>
+            <FavoritesDropdown onSelectCity={handleSelectFavorite} />
+          </div>
+          <div className="flex gap-2">
             <select
               id="city-select"
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-white/50 border border-white/30 outline-2 outline-offset-2 outline-primary transition-all"
+              className="flex-1 px-4 py-3 rounded-lg bg-white/50 border border-white/30 outline-2 outline-offset-2 outline-primary transition-all hover:bg-white/60"
               aria-label="City selection"
               disabled={loading}
             >
@@ -74,6 +99,18 @@ export function PlanAheadMode({ onResultsReady }: PlanAheadModeProps) {
                 </option>
               ))}
             </select>
+            <button
+              onClick={handleToggleFavorite}
+              disabled={!city}
+              className="flex-shrink-0 p-3 glass rounded-lg hover:scale-110 transition-transform disabled:opacity-50 disabled:cursor-not-allowed outline-2 outline-offset-2 outline-primary"
+              aria-label={isFav ? "Remove from favorites" : "Add to favorites"}
+              title={isFav ? "Remove from favorites" : "Add to favorites"}
+            >
+              <Star
+                size={20}
+                className={isFav ? "fill-accent text-accent" : "text-muted-foreground"}
+              />
+            </button>
           </div>
 
           <div>
@@ -86,7 +123,7 @@ export function PlanAheadMode({ onResultsReady }: PlanAheadModeProps) {
               value={date}
               onChange={(e) => setDate(e.target.value)}
               min={minDate}
-              className="w-full px-4 py-3 rounded-lg bg-white/50 border border-white/30 outline-2 outline-offset-2 outline-primary transition-all"
+              className="w-full px-4 py-3 rounded-lg bg-white/50 border border-white/30 outline-2 outline-offset-2 outline-primary transition-all hover:bg-white/60"
               aria-label="Event date selection"
               disabled={loading}
             />
@@ -95,7 +132,7 @@ export function PlanAheadMode({ onResultsReady }: PlanAheadModeProps) {
           <button
             onClick={handleCheck}
             disabled={!city || !date || loading}
-            className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium flex items-center justify-center gap-2 outline-2 outline-offset-2 outline-primary"
+            className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium flex items-center justify-center gap-2 outline-2 outline-offset-2 outline-primary hover:scale-105 active:scale-95"
           >
             <Calendar size={20} />
             {loading ? "Loading..." : "Check Forecast"}
@@ -109,8 +146,21 @@ export function PlanAheadMode({ onResultsReady }: PlanAheadModeProps) {
         </div>
       </div>
 
+      {loading && (
+        <div className="max-w-6xl mx-auto px-4 space-y-6">
+          <WeatherCardSkeleton />
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-6">
+              <WeatherCardSkeleton />
+              <WeatherCardSkeleton />
+            </div>
+            <WeatherCardSkeleton />
+          </div>
+        </div>
+      )}
+
       {/* Results Section */}
-      {forecast.length > 0 && (
+      {forecast.length > 0 && !loading && (
         <div className="max-w-6xl mx-auto px-4 space-y-6 animate-slide-up">
           <ForecastCard forecast={forecast} city={city} date={date} />
 

@@ -2,8 +2,8 @@
 
 import type React from "react"
 
-import { Cloud, CloudRain, CloudSnow, Wind, Droplets, Sun } from "lucide-react"
-import type { WeatherData } from "@/lib/mockWeather"
+import { Cloud, CloudRain, CloudSnow, Wind, Droplets, Sun } from 'lucide-react'
+import type { WeatherData } from "@/lib/fetchWeather"
 
 interface WeatherCardProps {
   weather: WeatherData
@@ -23,7 +23,7 @@ export function WeatherCard({ weather }: WeatherCardProps) {
   const icon = iconMap[condition] || iconMap.Clouds
 
   return (
-    <div className="glass rounded-2xl p-8 max-w-2xl mx-auto">
+    <div className="glass rounded-2xl p-8 flex-1 transition-all hover:scale-105 hover:shadow-lg">
       <div className="flex items-start justify-between mb-6">
         <div>
           <h2 className="text-4xl font-bold text-foreground">{weather.city}</h2>

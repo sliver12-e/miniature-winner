@@ -7,12 +7,12 @@ import { TodayMode } from "@/components/today-mode"
 import { PlanAheadMode } from "@/components/plan-ahead-mode"
 import { SkyMindOrb } from "@/components/skymind-orb"
 import { AboutSection } from "@/components/about-section"
+import { WeatherAnimations } from "@/components/weather-animations"
 import type { useWeatherMood } from "@/lib/weatherMood"
 
 export default function Home() {
   const [mode, setMode] = useState<"today" | "ahead" | null>(null)
   const [mood, setMood] = useState<ReturnType<typeof useWeatherMood> | null>(null)
-  const [bgGradient, setBgGradient] = useState("from-background to-background")
   const [summary, setSummary] = useState("")
 
   const handleModeChange = (newMode: "today" | "ahead") => {
@@ -22,10 +22,7 @@ export default function Home() {
 
   const handleResultsReady = (newMood: ReturnType<typeof useWeatherMood>) => {
     setMood(newMood)
-    // Create gradient CSS
-    setBgGradient(`from-[${newMood.colors.start}] via-[${newMood.colors.start}] to-[${newMood.colors.end}]`)
 
-    // Create summary for TTS
     const tts = `Hey! It's ${newMood.mood.toLowerCase()} out there. ${
       newMood.tone === "energetic" ? "Get ready for an awesome day!" : "Perfect for a relaxing day."
     } Don't forget to check the outfit and activity suggestions!`
@@ -41,6 +38,8 @@ export default function Home() {
           : "linear-gradient(135deg, #F5F8FB 0%, #DCE5EA 100%)",
       }}
     >
+      {mood && <WeatherAnimations weatherType={mood.dominantConditions[0] || "clouds"} />}
+
       <NavBar />
 
       <div className="pt-24 pb-12">
