@@ -1,30 +1,51 @@
-# WeatherWise app
+SkyMind – Intelligent Weather & Activity Assistant
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+SkyMind (WeatherWise) is a modern AI-powered weather application designed to help users plan their day with precision. It combines real-time weather forecasting with smart activity suggestions, outfit recommendations, and a clean, responsive UI.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/amo2s-projects/v0-weather-wise-app)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/e4D1hRZys7m)
+Whether you're checking the forecast, deciding what to wear, planning an outdoor event, or saving your favorite locations, SkyMind keeps everything simple and intuitive.
 
-## Overview
+🌤 Features
+Real-Time Weather
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+Accurate, location-based weather data
 
-## Deployment
+Detailed hourly & daily forecasts
 
-Your project is live at:
+Dynamic weather UI and icons
 
-**[https://vercel.com/amo2s-projects/v0-weather-wise-app](https://vercel.com/amo2s-projects/v0-weather-wise-app)**
+Smart Recommendations
 
-## Build your app
+Activity suggestions based on weather
 
-Continue building your app on:
+Outfit guidance
 
-**[https://v0.app/chat/e4D1hRZys7m](https://v0.app/chat/e4D1hRZys7m)**
+Event planning advice
 
-## How It Works
+Mood-based weather insights
 
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+Favorites System
+
+Save any city for quick access.
+
+Fast & Responsive
+
+Optimized for mobile and desktop.
+Powered by Next.js, TailwindCSS, and clean component architecture.
+
+🚀 Live App
+
+👉 https://skymind.vercel.app
+
+Your deployed WeatherWise/SkyMind app is live on Vercel and updates as you push changes to this repository.
+
+🛠 Tech Stack
+
+Next.js
+
+TypeScript
+
+TailwindCSS
+
+Lucide Icons
+
+Custom Weather & Mood Engine
