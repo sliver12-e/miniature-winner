@@ -34,7 +34,7 @@ Powered by Next.js, TailwindCSS, and clean component architecture.
 
 🚀 Live App
 
-👉 https://skymind.vercel.app
+👉 https://sky-mind.vercel.app
 
 Your deployed WeatherWise/SkyMind app is live on Vercel and updates as you push changes to this repository.
 
