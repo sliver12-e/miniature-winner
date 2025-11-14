@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { Calendar } from "lucide-react"
-import { generateForecastForDate, mockCities, type ForecastData } from "@/lib/mockWeather"
+import { Calendar } from 'lucide-react'
+import { fetchForecastByCity, type ForecastData } from "@/lib/fetchWeather"
 import { useWeatherMood } from "@/lib/weatherMood"
 import { ForecastCard } from "./forecast-card"
 import { ActivityCard } from "./activity-card"
@@ -13,25 +13,37 @@ interface PlanAheadModeProps {
   onResultsReady: (mood: ReturnType<typeof useWeatherMood>) => void
 }
 
+const CITIES = ["Lagos", "Tokyo", "New York", "London", "Paris", "Sydney", "Dubai", "Singapore"]
+
 export function PlanAheadMode({ onResultsReady }: PlanAheadModeProps) {
   const [city, setCity] = useState("")
   const [date, setDate] = useState("")
   const [forecast, setForecast] = useState<ForecastData[]>([])
   const [loading, setLoading] = useState(false)
-  const mood = useWeatherMood("") // Moved useWeatherMood to top level
+  const [error, setError] = useState("")
+  const mood = useWeatherMood("")
 
   const handleCheck = async () => {
     if (!city.trim() || !date) return
 
     setLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 600))
+    setError("")
 
-    const data = generateForecastForDate(date)
-    setForecast(data)
+    try {
+      const data = await fetchForecastByCity(city)
+      setForecast(data)
 
-    onResultsReady(mood) // Use the mood state here
-
-    setLoading(false)
+      // Generate mood from first forecast entry
+      const description = data[0] ? data[0].description : ""
+      const realMood = useWeatherMood(description)
+      onResultsReady(realMood)
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Failed to fetch forecast. Please try again."
+      setError(errorMsg)
+      setForecast([])
+    } finally {
+      setLoading(false)
+    }
   }
 
   const tomorrow = new Date()
@@ -53,9 +65,10 @@ export function PlanAheadMode({ onResultsReady }: PlanAheadModeProps) {
               onChange={(e) => setCity(e.target.value)}
               className="w-full px-4 py-3 rounded-lg bg-white/50 border border-white/30 outline-2 outline-offset-2 outline-primary transition-all"
               aria-label="City selection"
+              disabled={loading}
             >
               <option value="">Choose a city...</option>
-              {mockCities.map((c) => (
+              {CITIES.map((c) => (
                 <option key={c} value={c}>
                   {c}
                 </option>
@@ -75,6 +88,7 @@ export function PlanAheadMode({ onResultsReady }: PlanAheadModeProps) {
               min={minDate}
               className="w-full px-4 py-3 rounded-lg bg-white/50 border border-white/30 outline-2 outline-offset-2 outline-primary transition-all"
               aria-label="Event date selection"
+              disabled={loading}
             />
           </div>
 
@@ -84,8 +98,14 @@ export function PlanAheadMode({ onResultsReady }: PlanAheadModeProps) {
             className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium flex items-center justify-center gap-2 outline-2 outline-offset-2 outline-primary"
           >
             <Calendar size={20} />
-            Check Forecast
+            {loading ? "Loading..." : "Check Forecast"}
           </button>
+
+          {error && (
+            <div className="p-3 bg-red-100 text-red-800 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
         </div>
       </div>
 

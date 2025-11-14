@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { Search } from "lucide-react"
-import { mockCities, generateWeatherForCity, type WeatherData } from "@/lib/mockWeather"
+import { Search } from 'lucide-react'
+import { fetchWeatherByCity, type WeatherData } from "@/lib/fetchWeather"
 import { useWeatherMood } from "@/lib/weatherMood"
 import { WeatherCard } from "./weather-card"
 import { ActivityCard } from "./activity-card"
@@ -17,27 +17,30 @@ export function TodayMode({ onResultsReady }: TodayModeProps) {
   const [city, setCity] = useState("")
   const [weather, setWeather] = useState<WeatherData | null>(null)
   const [loading, setLoading] = useState(false)
-  const [suggestions, setSuggestions] = useState<string[]>([])
-  const mood = useWeatherMood("") // Initialize mood at the top level
+  const [error, setError] = useState("")
+  const mood = useWeatherMood("")
 
   const handleCheck = async () => {
     if (!city.trim()) return
 
     setLoading(true)
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 600))
+    setError("")
 
-    const data = generateWeatherForCity(city)
-    setWeather(data)
+    try {
+      const data = await fetchWeatherByCity(city)
+      setWeather(data)
 
-    onResultsReady(mood) // Use the mood from the top level
-
-    // Filter matching cities for suggestions
-    setSuggestions(
-      mockCities.filter((c) => c.toLowerCase().includes(city.toLowerCase()) && c.toLowerCase() !== city.toLowerCase()),
-    )
-
-    setLoading(false)
+      // Generate mood from real weather description
+      const description = data.weather.map((w) => w.description).join(", ")
+      const realMood = useWeatherMood(description)
+      onResultsReady(realMood)
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Failed to fetch weather. Please try again."
+      setError(errorMsg)
+      setWeather(null)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -49,7 +52,7 @@ export function TodayMode({ onResultsReady }: TodayModeProps) {
             Enter a city name
           </label>
           <div className="flex gap-2">
-            <div className="flex-1 relative">
+            <div className="flex-1">
               <input
                 id="city-input"
                 type="text"
@@ -59,20 +62,8 @@ export function TodayMode({ onResultsReady }: TodayModeProps) {
                 placeholder="e.g., Lagos, Tokyo, New York..."
                 className="w-full px-4 py-3 rounded-lg bg-white/50 border border-white/30 placeholder-muted-foreground/50 outline-2 outline-offset-2 outline-primary transition-all"
                 aria-label="City name input"
+                disabled={loading}
               />
-              {suggestions.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-border z-10">
-                  {suggestions.map((s) => (
-                    <button
-                      key={s}
-                      onClick={() => setCity(s)}
-                      className="w-full text-left px-4 py-2 hover:bg-background/50 first:rounded-t-lg last:rounded-b-lg text-sm"
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              )}
             </div>
             <button
               onClick={handleCheck}
@@ -81,9 +72,15 @@ export function TodayMode({ onResultsReady }: TodayModeProps) {
               aria-label="Check current weather for city"
             >
               <Search size={20} />
-              <span className="hidden sm:inline">Show Weather</span>
+              <span className="hidden sm:inline">{loading ? "Loading..." : "Show Weather"}</span>
             </button>
           </div>
+
+          {error && (
+            <div className="mt-3 p-3 bg-red-100 text-red-800 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
         </div>
       </div>
 
