@@ -1,11 +1,19 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+<<<<<<< HEAD
 import { Mail, Linkedin, Globe, Target, Rocket, Eye } from "lucide-react"
+=======
+import { Target, Rocket, Eye } from "lucide-react"
+>>>>>>> 7b9415a (clean update)
 
 export function AboutSection() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
+<<<<<<< HEAD
+=======
+  const [expandedCardIndex, setExpandedCardIndex] = useState<number | null>(null)
+>>>>>>> 7b9415a (clean update)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -30,20 +38,42 @@ export function AboutSection() {
       icon: Target,
       title: "Goal",
       description: "Empower users to make weather-smart decisions effortlessly.",
+<<<<<<< HEAD
+=======
+      moreInfo:
+        "Our goal is to make weather data actionable for daily planning. Users can get outfit suggestions, activity recommendations, and smart alerts based on the AI-powered forecast.",
+>>>>>>> 7b9415a (clean update)
     },
     {
       icon: Rocket,
       title: "Mission",
       description:
         "Provide real-time, actionable weather advice with outfit and activity suggestions, all delivered with a friendly AI voice.",
+<<<<<<< HEAD
+=======
+      moreInfo:
+        "We aim to integrate multiple data sources to give accurate, location-specific weather guidance. The AI learns user preferences to make planning effortless.",
+>>>>>>> 7b9415a (clean update)
     },
     {
       icon: Eye,
       title: "Vision",
       description: "Make planning your day seamless and enjoyable — wherever you are in the world.",
+<<<<<<< HEAD
     },
   ]
 
+=======
+      moreInfo:
+        "We envision a world where users feel confident in their daily decisions, from travel to dressing, based on smart, AI-assisted weather insights.",
+    },
+  ]
+
+  const toggleCard = (index: number) => {
+    setExpandedCardIndex(expandedCardIndex === index ? null : index)
+  }
+
+>>>>>>> 7b9415a (clean update)
   return (
     <section ref={sectionRef} aria-label="WeatherWise About Section" className="py-16 px-4 md:py-24">
       <div className="max-w-6xl mx-auto">
@@ -55,6 +85,7 @@ export function AboutSection() {
           </p>
         </div>
 
+<<<<<<< HEAD
         {/* Two-Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Left Column - App Info Cards */}
@@ -142,6 +173,52 @@ export function AboutSection() {
               </div>
             </div>
           </div>
+=======
+        {/* Info Cards */}
+        <div className="space-y-6">
+          {infoCards.map((card, index) => {
+            const Icon = card.icon
+            const isExpanded = expandedCardIndex === index
+
+            return (
+              <div
+                key={index}
+                className={`glass rounded-xl p-6 transition-all duration-700 transform hover:translate-y-[-8px] hover:shadow-lg cursor-pointer ${
+                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                }`}
+                style={{
+                  transitionDelay: isVisible ? `${index * 100}ms` : "0ms",
+                }}
+                onClick={() => toggleCard(index)}
+                aria-label={`${card.title} card`}
+              >
+                <div className="flex gap-4 items-start">
+                  <div className="flex-shrink-0">
+                    <Icon className="w-6 h-6 text-primary" aria-hidden="true" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-foreground mb-2">{card.title}</h3>
+                    <p className="text-foreground/70 leading-relaxed">{card.description}</p>
+
+                    {isExpanded && (
+                      <p className="text-foreground/60 mt-2 leading-relaxed">{card.moreInfo}</p>
+                    )}
+
+                    <button
+                      className="mt-2 text-sm text-primary font-medium underline"
+                      onClick={(e) => {
+                        e.stopPropagation() // Prevent parent click toggle
+                        toggleCard(index)
+                      }}
+                    >
+                      {isExpanded ? "View Less" : "View More"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+>>>>>>> 7b9415a (clean update)
         </div>
       </div>
     </section>
